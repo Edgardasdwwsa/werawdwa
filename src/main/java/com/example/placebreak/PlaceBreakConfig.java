@@ -16,6 +16,8 @@ public final class PlaceBreakConfig {
     public static int breakDelay = 2;
     /** Stop automatically after this many place+break cycles. 0 = never stop. */
     public static int maxCycles = 0;
+    /** Switch to a hotbar pickaxe to break the placed block, then switch back to the block. */
+    public static boolean usePickaxe = true;
     public static boolean swingHand = true;
     public static boolean showMessages = true;
 
@@ -32,6 +34,7 @@ public final class PlaceBreakConfig {
             placeDelay = clamp(parse(p, "placeDelay", placeDelay), 0, 20);
             breakDelay = clamp(parse(p, "breakDelay", breakDelay), 0, 20);
             maxCycles = clamp(parse(p, "maxCycles", maxCycles), 0, 1000);
+            usePickaxe = Boolean.parseBoolean(p.getProperty("usePickaxe", String.valueOf(usePickaxe)));
             swingHand = Boolean.parseBoolean(p.getProperty("swingHand", String.valueOf(swingHand)));
             showMessages = Boolean.parseBoolean(p.getProperty("showMessages", String.valueOf(showMessages)));
         } catch (IOException ignored) {
@@ -43,6 +46,7 @@ public final class PlaceBreakConfig {
         p.setProperty("placeDelay", String.valueOf(placeDelay));
         p.setProperty("breakDelay", String.valueOf(breakDelay));
         p.setProperty("maxCycles", String.valueOf(maxCycles));
+        p.setProperty("usePickaxe", String.valueOf(usePickaxe));
         p.setProperty("swingHand", String.valueOf(swingHand));
         p.setProperty("showMessages", String.valueOf(showMessages));
         try (Writer w = Files.newBufferedWriter(file())) {

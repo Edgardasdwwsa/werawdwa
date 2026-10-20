@@ -11,6 +11,7 @@ import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.item.BlockItem;
+import net.minecraft.registry.tag.ItemTags;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
@@ -35,6 +36,7 @@ public class PlaceBreakClient implements ClientModInitializer {
     private static int breakTicks = 0;
     private static boolean breakStarted = false;
     private static int cycles = 0;
+    private static int blockSlot = -1;
     private static BlockPos placedPos = null;
     private static Direction placedSide = Direction.UP;
 
@@ -64,6 +66,7 @@ public class PlaceBreakClient implements ClientModInitializer {
             breakStarted = false;
             breakTicks = 0;
             placedPos = null;
+            blockSlot = -1;
         } else if (mc.interactionManager != null) {
             mc.interactionManager.cancelBlockBreaking();
         }
@@ -107,6 +110,15 @@ public class PlaceBreakClient implements ClientModInitializer {
     }
 
     private static void doPlace(MinecraftClient mc, ClientPlayerEntity player, ClientPlayerInteractionManager im) {
+        int selected = player.getInventory().getSelectedSlot();
+        if (player.getMainHandStack().getItem() instanceof BlockItem) {
+            blockSlot = selected;
+        } else if (PlaceBreakConfig.usePickaxe && blockSlot >= 0 && blockSlot != selected) {
+            // We're still holding the pickaxe from the last break: go back to the block.
+            player.getInventory().setSelectedSlot(blockSlot);
+            wait = 1;
+            return;
+        }
         if (!(player.getMainHandStack().getItem() instanceof BlockItem)) {
             message(mc, "Hold a block in your main hand");
             setEnabled(mc, false);
@@ -151,6 +163,18 @@ public class PlaceBreakClient implements ClientModInitializer {
             return;
         }
 
+        if (PlaceBreakConfig.usePickaxe && !player.getMainHandStack().isIn(ItemTags.PICKAXES)) {
+            int slot = findPickaxeSlot(player);
+            if (slot < 0) {
+                message(mc, "No pickaxe in your hotbar");
+                setEnabled(mc, false);
+                return;
+            }
+            player.getInventory().setSelectedSlot(slot);
+            wait = 1; // give the server a tick to see the slot change
+            return;
+        }
+
         if (!breakStarted) {
             im.attackBlock(placedPos, placedSide);
             breakStarted = true;
@@ -165,5 +189,12 @@ public class PlaceBreakClient implements ClientModInitializer {
             message(mc, "Couldn't break the block, stopping");
             setEnabled(mc, false);
         }
+    }
+
+    private static int findPickaxeSlot(ClientPlayerEntity player) {
+        for (int i = 0; i < 9; i++) {
+            if (player.getInventory().getStack(i).isIn(ItemTags.PICKAXES)) return i;
+        }
+        return -1;
     }
 }

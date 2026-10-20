@@ -20,7 +20,7 @@ public class PlaceBreakScreen extends Screen {
     protected void init() {
         int w = 200;
         int x = this.width / 2 - w / 2;
-        int y = this.height / 2 - 80;
+        int y = this.height / 2 - 95;
         int step = 24;
 
         this.addDrawableChild(ButtonWidget.builder(
@@ -51,22 +51,29 @@ public class PlaceBreakScreen extends Screen {
                     this.clearAndInit();
                 }).dimensions(x + w / 2 + 2, y + step * 4, w / 2 - 2, 20).build());
 
+        this.addDrawableChild(ButtonWidget.builder(
+                Text.literal("Break with pickaxe: " + (PlaceBreakConfig.usePickaxe ? "ON" : "OFF")),
+                b -> {
+                    PlaceBreakConfig.usePickaxe = !PlaceBreakConfig.usePickaxe;
+                    this.clearAndInit();
+                }).dimensions(x, y + step * 5, w, 20).build());
+
         this.addDrawableChild(ButtonWidget.builder(Text.literal("Done"), b -> this.close())
-                .dimensions(x, y + step * 5 + 6, w, 20).build());
+                .dimensions(x, y + step * 6 + 6, w, 20).build());
     }
 
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
         super.render(context, mouseX, mouseY, delta);
-        context.drawCenteredTextWithShadow(this.textRenderer, this.title, this.width / 2, this.height / 2 - 110, 0xFFFFFF);
+        context.drawCenteredTextWithShadow(this.textRenderer, this.title, this.width / 2, this.height / 2 - 120, 0xFFFFFF);
 
         Text toggle = Text.literal("Toggle: ").append(PlaceBreakClient.toggleKey.getBoundKeyLocalizedText());
         Text gui = Text.literal("This menu: ").append(PlaceBreakClient.guiKey.getBoundKeyLocalizedText());
-        int by = this.height / 2 + 62;
+        int by = this.height / 2 + 69;
         context.drawCenteredTextWithShadow(this.textRenderer, toggle, this.width / 2, by + 16, 0xAAAAAA);
         context.drawCenteredTextWithShadow(this.textRenderer, gui, this.width / 2, by + 28, 0xAAAAAA);
         context.drawCenteredTextWithShadow(this.textRenderer,
-                Text.literal("Hold a block and aim at a surface"), this.width / 2, by + 44, 0x888888);
+                Text.literal("Block + pickaxe in hotbar, aim at a surface"), this.width / 2, by + 44, 0x888888);
     }
 
     @Override
