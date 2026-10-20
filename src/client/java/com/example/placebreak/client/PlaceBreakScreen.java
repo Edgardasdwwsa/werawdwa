@@ -1,4 +1,4 @@
-package com.example.placebreak;
+package com.example.placebreak.client;
 
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;

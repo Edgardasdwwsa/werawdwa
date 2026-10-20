@@ -1,19 +1,20 @@
 {
-  "schemaVersion": 1,
-  "id": "placebreak",
-  "version": "${version}",
-  "name": "Place & Break",
-  "description": "Places a block where you aim, then breaks it, on repeat. Has a settings GUI and keybinds.",
-  "authors": ["You"],
-  "license": "MIT",
-  "environment": "client",
-  "entrypoints": {
-    "client": ["com.example.placebreak.PlaceBreakClient"]
-  },
-  "depends": {
-    "fabricloader": ">=0.16.0",
-    "minecraft": "~1.21.11",
-    "java": ">=21",
-    "fabric-api": "*"
-  }
+	"schemaVersion": 1,
+	"id": "placebreak",
+	"version": "${version}",
+	"name": "Place & Break",
+	"description": "Places a block where you aim, then breaks it with a pickaxe, on repeat. Has a settings GUI and keybinds.",
+	"authors": ["You"],
+	"license": "CC0-1.0",
+	"icon": "assets/placebreak/icon.png",
+	"environment": "client",
+	"entrypoints": {
+		"client": ["com.example.placebreak.client.PlaceBreakClient"]
+	},
+	"depends": {
+		"fabricloader": ">=0.19.5",
+		"minecraft": "~1.21.11",
+		"java": ">=21",
+		"fabric-api": "*"
+	}
 }

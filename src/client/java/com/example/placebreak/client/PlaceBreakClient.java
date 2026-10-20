@@ -1,4 +1,4 @@
-package com.example.placebreak;
+package com.example.placebreak.client;
 
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
